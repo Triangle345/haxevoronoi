@@ -1,6 +1,6 @@
 package haxevor;
 
-class Point
+class ConcretePoint
 {
 
     public var x(default,default) = 0.0;
@@ -10,12 +10,18 @@ class Point
         this.x = x;
         this.y = y;
     }
-
     public function toString():String
     {
-
         return ('Point: $x,$y');
     }
+}
+
+@:forward(x,y,toString)
+abstract Point (ConcretePoint) from ConcretePoint to ConcretePoint{
+    public function new(x:Float = 0.0, y:Float = 0.0) {
+        this = new ConcretePoint(x,y);
+    }
+    
 
     @:op(A == B)
     public static function equals(lhs:Point, rhs:Point):Bool {
@@ -29,7 +35,8 @@ class Point
 
     public function distanceFrom(o:Point)
     {
-        return Math.sqrt(Math.pow(o.x - x,2) + Math.pow(o.y - y,2));
+        var p:Point = this;
+        return Math.sqrt(Math.pow(o.x - p.x,2) + Math.pow(o.y - p.y,2));
     }
 
 }

@@ -11,6 +11,7 @@ import haxevor.Point;
 import haxevor.Line;
 import haxevor.Triangle;
 import haxevor.Circle;
+import neko.vm.Thread;
 
 import flixel.text.FlxText;
 
@@ -20,7 +21,8 @@ import flixel.FlxSprite;
 
 class MenuState extends FlxState
 {
-	
+	var vor = new Voronoi();
+	var pnts = new Array<Point>();
 	override public function create():Void
 	{
 		super.create();
@@ -63,28 +65,93 @@ class MenuState extends FlxState
 		var circle = tri.circumcircle();
 		trace('Circle: $circle');
 		
-		var vor = new Voronoi();
+		
 
-		var pnts = new Array<Point>();
-		pnts.push(new Point(100,100));
-		pnts.push(new Point(50,75));
-		pnts.push(new Point(200,120));
+		
+		pnts.push(new Point(130,140));
+		pnts.push(new Point(175,300));
+		pnts.push(new Point(205,110));
+		pnts.push(new Point(220,200));
+		pnts.push(new Point(250,185));
 
+		// pnts.push(new Point(300,230));
+
+		Thread.create(_testThread);
+		
 		var dtri = vor.BowyerWatson(pnts);
+		
 
-		trace('dualaney tri: $dtri');
+		//add(text);
+		//add(new CircleSprite(circle));
+		//add(new TriangleSprite(tri));
 
-		add(text);
-		add(new CircleSprite(circle));
-		add(new TriangleSprite(tri));
+			
+			for (t in dtri) {
+				add(new TriangleSprite(t));
 
-		var l = new Line(new Point(0,0), new Point(50,50));
+				add(new FlxText(t.p1.x,t.p1.y, 50, t.p1.toString() ,7));
+				add(new CircleSprite(new Circle(t.p1,3)));
+
+				add(new CircleSprite(new Circle(t.p2,3)));
+				add(new FlxText(t.p2.x,t.p2.y, 50, t.p2.toString() ,7));
+
+				add(new CircleSprite(new Circle(t.p3,3)));
+				add(new FlxText(t.p3.x,t.p3.y, 50, t.p3.toString() ,7));
+				
+				
+			
+			}
 		
 
 	}
-
+	private function _testThread() : Void
+	{
+		Sys.sleep(2);
+		// var test = vor.BowyerWatson(pnts);
+	}
 	override public function update(elapsed:Float):Void
 	{
 		super.update(elapsed);
+		
+		if (FlxG.mouse.justReleasedRight) {
+			// this.clear();
+			// pnts.push(new Point(FlxG.mouse.getPosition().x,FlxG.mouse.getPosition().y));
+			// var vor = new Voronoi();
+			// trace(FlxG.mouse.getPosition());
+			// var dtri = vor.BowyerWatson(pnts);
+			// trace('dualaney tri: $dtri');
+			// for (t in dtri) {
+			// add(new TriangleSprite(t));
+
+			// add(new FlxText(t.p1.x,t.p1.y, 50, t.p1.toString() ,7));
+			// add(new CircleSprite(new Circle(t.p1,2)));
+
+			// add(new CircleSprite(new Circle(t.p2,2)));
+			// add(new FlxText(t.p3.x,t.p3.y, 50, t.p3.toString() ,7));
+
+			// add(new CircleSprite(new Circle(t.p3,2)));
+			// add(new FlxText(t.p3.x,t.p3.y, 50, t.p3.toString() ,7));
+			
+			}
+			// var dtri = this.vor.triangulation;
+			
+			// for (t in dtri) {
+			// 	add(new TriangleSprite(t));
+
+			// 	add(new FlxText(t.p1.x,t.p1.y, 50, t.p1.toString() ,7));
+			// 	add(new CircleSprite(new Circle(t.p1,3)));
+
+			// 	add(new CircleSprite(new Circle(t.p2,3)));
+			// 	add(new FlxText(t.p2.x,t.p2.y, 50, t.p2.toString() ,7));
+
+			// 	add(new CircleSprite(new Circle(t.p3,3)));
+			// 	add(new FlxText(t.p3.x,t.p3.y, 50, t.p3.toString() ,7));
+				
+				
+			
+			// }
+
+		Sys.sleep(.01);
+		
 	}
 }

@@ -13,7 +13,11 @@ class Circle
 
     public function contains(p:Point):Bool 
     {
-        if (p.x <= center.x + radius && p.y <= center.y + radius){
+
+        var distance = 
+            Math.sqrt(Math.pow((p.x - center.x),2) + Math.pow((p.y - center.y),2));
+
+        if (distance < radius){
             return true;
         }
 

@@ -21,7 +21,6 @@ abstract Line(ConcreteLine) from ConcreteLine to ConcreteLine {
     }
     @:op(A == B)
     public static inline function equals(lhs:Line, rhs:Line):Bool {
-        trace("comparing!");
         if ( (lhs.p1 == rhs.p1 || lhs.p1 == rhs.p2) && 
             (lhs.p2 == rhs.p2 || lhs.p2 == rhs.p1)) {
             

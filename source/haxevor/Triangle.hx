@@ -1,7 +1,7 @@
 package haxevor;
 
 
-class Triangle
+class ConcreteTriangle
 {
 
     public var p1 = new Point();
@@ -14,12 +14,22 @@ class Triangle
         this.p2 = p2;
         this.p3 = p3;
     }
+}
+
+@:forward(p1,p2,p3)
+abstract Triangle(ConcreteTriangle) from ConcreteTriangle to ConcreteTriangle
+{
+    public function new (p1: Point, p2: Point, p3: Point)
+    {
+        this = new ConcreteTriangle(p1,p2,p3);
+    }
 
     @:op(A == B)
     public static function equals(lhs:Triangle, rhs:Triangle):Bool {
+        
         if ( (lhs.p1 == rhs.p1 || lhs.p1 == rhs.p2 || lhs.p1 == rhs.p3) && 
-            (lhs.p2 == rhs.p2 || lhs.p2 == rhs.p1|| lhs.p2 == rhs.p3) &&
-            (lhs.p3 == rhs.p2 || lhs.p3 == rhs.p1|| lhs.p3 == rhs.p3)) {
+            (lhs.p2 == rhs.p1 || lhs.p2 == rhs.p2|| lhs.p2 == rhs.p3) &&
+            (lhs.p3 == rhs.p1 || lhs.p3 == rhs.p2|| lhs.p3 == rhs.p3)) {
             return true;
         } else {
             return false;
@@ -27,31 +37,37 @@ class Triangle
     }
 
     public function getEdges(): Array<Line> {
+        var t:Triangle = this;
         var edges = new Array<Line>();
 
-        edges.push(new Line(p1,p2));
-        edges.push(new Line(p1,p3));
-        edges.push(new Line(p2,p3));
+        edges.push(new Line(t.p1,t.p2));
+        edges.push(new Line(t.p2,t.p3));
+        edges.push(new Line(t.p1,t.p3));
 
         return edges;
     }
 
     public function containsPoint(p:Point):Bool {
-        if (p == p1 || p == p2 || p == p3) {
+        
+        var t:Triangle = this;
+        trace('comparing p: $p to triangle: $t');
+        if (p == t.p1 || p == t.p2 || p == t.p3) {
+            trace("TRUE");
             return true;
         }
 
+        trace("FALSE");
         return false;
     }
 
     public function containsLine(l:Line):Bool {
-        var e1 = new Line(p1,p2);
-        var e2 = new Line(p1,p3);
-        var e3 = new Line(p2,p3);
-        trace("this " + this);
-        trace('line: $l');
+        var t:Triangle = this;
+
+        var e1 = new Line(t.p1,t.p2);
+        var e2 = new Line(t.p1,t.p3);
+        var e3 = new Line(t.p2,t.p3);
+
         if (e1 == l || e2 == l || e3 == l) {
-            trace("found match");
             return true;
         }
 
@@ -61,11 +77,13 @@ class Triangle
     public function circumcircle() : Circle
     {
 
+        var t:Triangle = this;
+
         var center:Point = null;
 
-        var l1 = new Line(p1,p2);        
-        var l2 = new Line(p1,p3);
-        var l3 = new Line(p2,p3);
+        var l1 = new Line(t.p1,t.p2);        
+        var l2 = new Line(t.p1,t.p3);
+        var l3 = new Line(t.p2,t.p3);
 
         var lines = new Array<Line>();
 
@@ -114,6 +132,6 @@ class Triangle
         //trace('intersection2: $intPnt2');
 
 
-        return new Circle(center, center.distanceFrom(p1));
+        return new Circle(center, center.distanceFrom(t.p1));
     }
 }
