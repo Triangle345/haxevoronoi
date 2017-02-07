@@ -12,6 +12,7 @@ import haxevor.Line;
 import haxevor.Triangle;
 import haxevor.Circle;
 import neko.vm.Thread;
+import haxevor.LineHash;
 
 import flixel.text.FlxText;
 
@@ -101,8 +102,36 @@ class MenuState extends FlxState
 				
 			
 			}
-		
 
+
+			var cells = vor.GenerateVoronoi(pnts);
+			for (c in cells) {
+				trace("cell: $c, border: " + c.border);
+				for (e in c.border) {
+					add(new LineSprite(e));
+				}
+				
+			}
+
+			
+			var testmap = new Map<LineHash,String>();
+			//{
+			var l = new Line(new Point(1,4),new Point(5,6));
+			// trace('hashcode 1:', l.hashCode());
+			testmap[l.hashCode()] = "testing";
+			//}
+			var l = new Line(new Point(1,4),new Point(5,6));
+			// trace('hashcode 2:', l.hashCode());
+			trace('contents of map: $testmap');
+			trace('contents of map:', testmap[l.hashCode()]);
+			// trace('hashcode:', l.hashCode());
+			testmap[l.hashCode()] = "testing2";
+			trace('contents of map: $testmap');
+			// trace('hashcode:', l.hashCode());
+			testmap[l.hashCode()] = "testing2";
+			trace('contents of map: $testmap');
+			// trace('hashcode:', l.hashCode());
+		
 	}
 	private function _testThread() : Void
 	{

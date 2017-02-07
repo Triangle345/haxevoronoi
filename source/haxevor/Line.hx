@@ -1,5 +1,6 @@
 package haxevor;
 
+
 class ConcreteLine 
 {
     public var p1 = new Point();
@@ -91,6 +92,11 @@ abstract Line(ConcreteLine) from ConcreteLine to ConcreteLine {
 
     }
 
+    
+    public function hashCode():Int {
+        var mid = midpoint();
+        return mid.hashCode();
+    }
 
 
     

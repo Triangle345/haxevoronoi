@@ -22,6 +22,10 @@ abstract Point (ConcretePoint) from ConcretePoint to ConcretePoint{
         this = new ConcretePoint(x,y);
     }
     
+    public function hashCode():Int {
+        
+        return Std.int(((this.x + this.y) * (this.x + this.y + 1)/2) + this.y);
+    }
 
     @:op(A == B)
     public static function equals(lhs:Point, rhs:Point):Bool {
@@ -30,6 +34,21 @@ abstract Point (ConcretePoint) from ConcretePoint to ConcretePoint{
         } else {
             return false;
         }
+    }
+
+    @:op(A + B)
+    public static function addition(lhs:Point, rhs:Point):Point {
+        return new Point(lhs.x + rhs.x, lhs.y + rhs.y);
+    }
+
+    @:op(A - B)
+    public static function subtract(lhs:Point, rhs:Point):Point {
+        return new Point(lhs.x - rhs.x, lhs.y - rhs.y);
+    }
+
+    @:op(A / B)
+    public static function division(lhs:Point, div:Float):Point {
+        return new Point(lhs.x/div, lhs.y/div);
     }
 
 

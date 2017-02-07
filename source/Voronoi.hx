@@ -1,50 +1,62 @@
 import haxevor.Point;
 import haxevor.Triangle;
 import haxevor.Line;
+import haxevor.Circle;
+import haxevor.VorCell;
 
 class Voronoi
 {
     var pnts = new Array<Point>();
-    public var triangulation = new Array<Triangle>();
+    
+
     public function new() {
 
     }
 
-    public function BowyerWatson(points:Array<Point>) : Array<Triangle> {
+    public function GenerateVoronoi(points:Array<Point>) : Array<VorCell> {
+        var cells = new Array<VorCell>();
+        var p2t = new Map<Point,Array<Triangle>>();
+        var tris = BowyerWatson(points);
         
+        for (t in tris) {
+            var triPs = new Array<Point>();
+
+            triPs.push(t.p1);
+            triPs.push(t.p2);
+            triPs.push(t.p3);
+
+            // create a map of all points to all triangles that share that point.
+            for (p in triPs) {
+                if (p2t[p] == null) {
+                    p2t[p] = new Array<Triangle>();
+                    p2t[p].push(t);
+                } else {
+                    p2t[p].push(t);
+                }
+            }
+        }
+
+        for(key in p2t.keys()) {
+            var vcell = new VorCell(key, p2t[key]);
+            cells.push(vcell);
+        }
+
+        var test = new Map<Line, String>();
+        var l = new Line(new Point(4,3), new Point(6,2));
+        test[l] = "mytest";
+        trace("TESTING IS: ", test[l]);
+
+        return cells;
+
+    }
+    public function BowyerWatson(points:Array<Point>) : Array<Triangle> {
+        var triangulation = new Array<Triangle>();
 
         this.pnts = points;
 
 
 
-        haxe.ds.ArraySort.sort(pnts, function(a:Point,b:Point):Int {
-            if (a.y < b.y) return -1;
-            else if (a.y > b.y) return 1;
-            return 0;
-        });
-
-        var highestY = pnts[pnts.length - 1].y;
-        var lowestY = pnts[0].y;
-
-
-
-        trace('highestY: $highestY | lowestY: $lowestY');
-
-            haxe.ds.ArraySort.sort(pnts, function(a:Point,b:Point):Int {
-            if (a.x < b.x) return -1;
-            else if (a.x > b.x) return 1;
-            return 0;
-        });
-
-        var highestX = pnts[pnts.length - 1].x;
-        var lowestX = pnts[0].x;
-
-        trace('highestX: $highestX | lowestX: $lowestX');
-
-        var superTri = new Triangle(
-                new Point(lowestX-lowestX-300 , highestY + 100),
-                new Point(highestX + highestX + 400, highestY + 100), 
-                new Point((highestX*2 - 0)/2, lowestY - lowestY));
+        var superTri = getSuperTri();
 
         triangulation.push(superTri);
 
@@ -127,5 +139,50 @@ class Voronoi
         trace('super tri: $superTri');
         return triangulation;
     }
+
+     public function getSuperTri():Triangle {
+            
+        haxe.ds.ArraySort.sort(pnts, function(a:Point,b:Point):Int {
+                if (a.y < b.y) return -1;
+                else if (a.y > b.y) return 1;
+                return 0;
+            });
+
+            var highestY = pnts[pnts.length - 1].y;
+            var lowestY = pnts[0].y;
+
+
+
+            trace('highestY: $highestY | lowestY: $lowestY');
+
+                haxe.ds.ArraySort.sort(pnts, function(a:Point,b:Point):Int {
+                if (a.x < b.x) return -1;
+                else if (a.x > b.x) return 1;
+                return 0;
+            });
+
+            var highestX = pnts[pnts.length - 1].x;
+            var lowestX = pnts[0].x;
+
+            trace('highestX: $highestX | lowestX: $lowestX');
+
+            var xMid = (highestX + lowestX)/2;
+            var yMid = (highestY + lowestY)/2;
+            var xRange = highestX - lowestX;
+            var yRange = highestY - lowestY;
+            
+            var rad = (xRange > yRange) ? xRange/2: yRange/2;
+
+            // neeed to add 1 to radius in case  point falls on the edge. Add another one for rounding
+            var superCircle = new Circle(new Point(xMid,yMid),rad + 2);
+            trace('super circle: $superCircle');
+
+
+            var superTri = superCircle.equalateralTriangle();
+
+            trace('super tri: $superTri');
+
+            return superTri;
+        }
 
 }
