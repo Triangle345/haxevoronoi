@@ -45,30 +45,37 @@ abstract Line(ConcreteLine) from ConcreteLine to ConcreteLine {
 
     public function perpBisect(): Line {
 
-        var slope:Float = null;
 
+        var slope = 0.0;
         var line:Line = this;
+        
+        var mp = midpoint();
 
         try {
             slope = line.slope();
 
-        } catch(s:String) {}
+        } catch(s:String) {
+
+            // slope of perp is horizontal line; 0.
+            var b = mp.y;
+
+            var pp2 = new Point(0, b);
+
+            // y = mPerp * x + b
+            return new Line(mp, pp2);
+        }
 
         // if slope of this line is zero we know its a horizontal Line
         // the perp of a horizontal line is a virtical line which is undefined.
         if (slope == 0) {
-            throw "Perp is Horizontal line, no slope defined for bisector!" + this ;
+            throw "Perp is Vertical line, no slope defined for bisector!" + this ;
         }
 
         // if slope is undefined then we know its a vertical line..
         // the perpendicular of virtical line is a horizontal line with slope 0
-        var mPerp = 0.0;
-        if (slope != null) {
-           mPerp = (1/slope) * -1;
-        }
 
-        
-        var mp = midpoint();
+        var mPerp = (1/slope) * -1;
+
 
         var b = (-1 * (mPerp * mp.x) ) + mp.y;
 

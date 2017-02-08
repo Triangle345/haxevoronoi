@@ -92,19 +92,19 @@ abstract Triangle(ConcreteTriangle) from ConcreteTriangle to ConcreteTriangle
         {
             var l1p = l1.perpBisect();
             lines.push(l1p);
-        } catch(s:String){}
+        } catch(s:String){trace(s);}
         
         try 
         {
             var l2p = l2.perpBisect();
             lines.push(l2p);
-        }catch(s:String){}
+        }catch(s:String){trace(s);}
 
         try 
         {
             var l3p = l3.perpBisect();
             lines.push(l3p);
-        }catch (s:String){}
+        }catch (s:String){trace(s);}
 
 
         if (lines.length <= 1) 

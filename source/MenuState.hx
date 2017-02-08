@@ -11,7 +11,6 @@ import haxevor.Point;
 import haxevor.Line;
 import haxevor.Triangle;
 import haxevor.Circle;
-import neko.vm.Thread;
 import haxevor.LineHash;
 
 import flixel.text.FlxText;
@@ -75,9 +74,10 @@ class MenuState extends FlxState
 		pnts.push(new Point(220,200));
 		pnts.push(new Point(250,185));
 
-		// pnts.push(new Point(300,230));
+		pnts.push(new Point(300,230));
+		pnts.push(new Point(400,230));
+		pnts.push(new Point(400,120));
 
-		Thread.create(_testThread);
 		
 		var dtri = vor.BowyerWatson(pnts);
 		
