@@ -3,6 +3,10 @@ Voronoi/Delaunay triangulation Library for haxe
 The below code should be easy to follow. Straight forward library not much explanation needed.
 I will try to post the haxedoc soon.
 
+    import haxevor.Point;
+    import haxevor.Voronoi;
+
+    var vor = new Voronoi();
 
     pnts.push(new Point(130,140));
     pnts.push(new Point(175,300));
