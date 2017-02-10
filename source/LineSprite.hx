@@ -4,8 +4,8 @@ import flixel.util.FlxSpriteUtil;
 import haxevor.Line;
 import flixel.util.FlxColor;
 import flixel.util.FlxSpriteUtil.LineStyle;
-import flixel.math.FlxPoint;
 
+// Draws a line
 class LineSprite extends FlxSprite {
     public function new(line: Line) {
         super(1,1);

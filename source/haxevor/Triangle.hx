@@ -16,6 +16,7 @@ class ConcreteTriangle
     }
 }
 
+// abstract triangle wraps concrete triangle to overload operators.
 @:forward(p1,p2,p3)
 abstract Triangle(ConcreteTriangle) from ConcreteTriangle to ConcreteTriangle
 {
@@ -36,6 +37,7 @@ abstract Triangle(ConcreteTriangle) from ConcreteTriangle to ConcreteTriangle
         }
     }
 
+    // returns edges of this triangle from points.
     public function getEdges(): Array<Line> {
         var t:Triangle = this;
         var edges = new Array<Line>();
@@ -47,19 +49,20 @@ abstract Triangle(ConcreteTriangle) from ConcreteTriangle to ConcreteTriangle
         return edges;
     }
 
+    // determines if a point is one of the 3 points of the triangle.
+    // this should maybe renamed because it does NOT calculate if a point is inside.
     public function containsPoint(p:Point):Bool {
         
         var t:Triangle = this;
-        trace('comparing p: $p to triangle: $t');
         if (p == t.p1 || p == t.p2 || p == t.p3) {
-            trace("TRUE");
             return true;
         }
 
-        trace("FALSE");
         return false;
     }
 
+    // same as contains point. Does NOT calculate if line is inside but
+    // simply tries to match if the line exists as one of the 3 point pairs.
     public function containsLine(l:Line):Bool {
         var t:Triangle = this;
 
@@ -74,6 +77,9 @@ abstract Triangle(ConcreteTriangle) from ConcreteTriangle to ConcreteTriangle
         return false;
     }
 
+    // returns circumcirlce of this triangle.
+    // If this triangle contains at least 2 valid perpendicular 
+    // bisectors, it can find the semicircle. Otherwise throws an error.
     public function circumcircle() : Circle
     {
 
@@ -87,7 +93,7 @@ abstract Triangle(ConcreteTriangle) from ConcreteTriangle to ConcreteTriangle
 
         var lines = new Array<Line>();
 
-
+        // find perp bisector of all three edges
         try 
         {
             var l1p = l1.perpBisect();
@@ -107,6 +113,7 @@ abstract Triangle(ConcreteTriangle) from ConcreteTriangle to ConcreteTriangle
         }catch (s:String){trace(s);}
 
 
+        // need at least 2 edges to find the circumcircle.
         if (lines.length <= 1) 
         {
             throw("Cannot find perpendicular bisector of any points in triangle: " + this);
@@ -115,6 +122,7 @@ abstract Triangle(ConcreteTriangle) from ConcreteTriangle to ConcreteTriangle
 
         var tmpLine:Line = null;
 
+        // this simply finds the intersection of 2 or more lines.
         for (line in lines) 
         {
             if (tmpLine == null) {
@@ -123,14 +131,7 @@ abstract Triangle(ConcreteTriangle) from ConcreteTriangle to ConcreteTriangle
             }        
 
             center = tmpLine.intersection(line);
-
     }
-
-        //trace('intersection1: $intPnt1');
-
-               // var intPnt2 = l1p.intersection(l3p);
-        //trace('intersection2: $intPnt2');
-
 
         return new Circle(center, center.distanceFrom(t.p1));
     }

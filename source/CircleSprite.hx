@@ -4,6 +4,7 @@ import flixel.util.FlxSpriteUtil;
 import haxevor.Circle;
 import flixel.util.FlxColor;
 
+// Draws a circle
 class CircleSprite extends FlxSprite {
     public function new(circle: Circle) {
         super(1,1);

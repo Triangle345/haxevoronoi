@@ -52,6 +52,7 @@ abstract Point (ConcretePoint) from ConcretePoint to ConcretePoint{
     }
 
 
+    // finds euclidean distance from anther point.
     public function distanceFrom(o:Point)
     {
         var p:Point = this;

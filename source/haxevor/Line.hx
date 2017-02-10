@@ -31,6 +31,7 @@ abstract Line(ConcreteLine) from ConcreteLine to ConcreteLine {
         }
     }
 
+    // finds the slope. Throws if undefined.
     public inline function slope() : Float {
 
         var line:Line = this;
@@ -43,6 +44,9 @@ abstract Line(ConcreteLine) from ConcreteLine to ConcreteLine {
     }
 
 
+    // finds perpendicular bisector.
+    // basically the mid point with inverse slope.
+    // throws if slope undefined.
     public function perpBisect(): Line {
 
 
@@ -73,7 +77,6 @@ abstract Line(ConcreteLine) from ConcreteLine to ConcreteLine {
 
         // if slope is undefined then we know its a vertical line..
         // the perpendicular of virtical line is a horizontal line with slope 0
-
         var mPerp = (1/slope) * -1;
 
 

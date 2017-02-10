@@ -1,22 +1,28 @@
-import haxevor.Point;
-import haxevor.Triangle;
-import haxevor.Line;
-import haxevor.Circle;
-import haxevor.VorCell;
+package haxevor;
 
+
+// Voronoi is the main class used to calculate the voronoi diagram.
+// in addition it can also create a d. triangulation.
 class Voronoi
 {
+    // the points we recvd as input
     var pnts = new Array<Point>();
     
+    // empty constructor
+    public function new() {}
 
-    public function new() {
-
-    }
-
+    // Generate a voronoi diagram from a list of points.
     public function GenerateVoronoi(points:Array<Point>) : Array<VorCell> {
+
+        // we are returning these cells.
         var cells = new Array<VorCell>();
+
+        // need a mapping of triangle point to the triangles that share it.. 
+        // a cell is located here
         var p2t = new Map<Point,Array<Triangle>>();
-        var tris = BowyerWatson(points);
+
+        // triangulation is dual of voronoi
+        var tris = GenerateTriangulation(points);
         
         for (t in tris) {
             var triPs = new Array<Point>();
@@ -36,34 +42,29 @@ class Voronoi
             }
         }
 
+        // create a proper voronoi cell with all triangles we found from that cell; find the border.
         for(key in p2t.keys()) {
             var vcell = new VorCell(key, p2t[key]);
             cells.push(vcell);
         }
 
-        var test = new Map<Line, String>();
-        var l = new Line(new Point(4,3), new Point(6,2));
-        test[l] = "mytest";
-        trace("TESTING IS: ", test[l]);
 
         return cells;
 
     }
-    public function BowyerWatson(points:Array<Point>) : Array<Triangle> {
+
+    // Generates a d. triangulation.  BowerWatson algorithm(sp?)
+    public function GenerateTriangulation(points:Array<Point>) : Array<Triangle> {
         var triangulation = new Array<Triangle>();
 
         this.pnts = points;
 
-
-
         var superTri = getSuperTri();
-
         triangulation.push(superTri);
 
 
         for (p in pnts) 
         {
-            trace('POINT: $p');
             //TODO this needs to be a set
             var badTris = new Array<Triangle> ();
 
@@ -73,7 +74,6 @@ class Voronoi
                 
                 if (circle.contains(p)) {
                     if (badTris.indexOf(t) < 0){
-                        trace('circle:$circle contains piont: $p adding: $t');
                         badTris.push(t);
                     }
                 }
@@ -85,18 +85,18 @@ class Voronoi
 
                 for (e in edges) {
                     var hitcount = 0;
-                    trace('edge comparing in bad tris: $e');
+
+                    // since i did not use proper sets.. we need to make sure no dups
                     for (t in badTris) {
                         if (t.containsLine(e)) {
-                            trace('tri $t contains $e');
                             hitcount ++;
                         }
                     }
+
                     // only shared by source triangle and nothing else, add
                     if (hitcount == 1) {
                         
                         if (polygon.indexOf(e) < 0) {
-                            trace('adding to polycount: $e');
                             polygon.push(e);
                         }
 
@@ -112,12 +112,9 @@ class Voronoi
 
             for (e in polygon) {
                 var newtri = new Triangle(p, e.p1, e.p2);
-                trace('created new triangle $newtri');
                 triangulation.push(newtri);
             }
-            trace('TRIANGULATION b4 sleep is: $triangulation');
         }
-        trace('triangulation before : $triangulation');
 
         var removeLst = new Array<Triangle>();
 
@@ -135,13 +132,15 @@ class Voronoi
              triangulation.remove(t);
         }
 
-        trace('triangulation after : $triangulation');
-        trace('super tri: $superTri');
         return triangulation;
     }
 
+     // creates a super triangle from the points input.
+     // Finds the range of X,Y and uses that to find a circle, which
+     // then gives us an equalateral triangle based on a formula.
      public function getSuperTri():Triangle {
-            
+
+        // sort by y so we can find y range  
         haxe.ds.ArraySort.sort(pnts, function(a:Point,b:Point):Int {
                 if (a.y < b.y) return -1;
                 else if (a.y > b.y) return 1;
@@ -155,7 +154,8 @@ class Voronoi
 
             trace('highestY: $highestY | lowestY: $lowestY');
 
-                haxe.ds.ArraySort.sort(pnts, function(a:Point,b:Point):Int {
+            // sort by x so we can find x range.
+            haxe.ds.ArraySort.sort(pnts, function(a:Point,b:Point):Int {
                 if (a.x < b.x) return -1;
                 else if (a.x > b.x) return 1;
                 return 0;
@@ -166,17 +166,19 @@ class Voronoi
 
             trace('highestX: $highestX | lowestX: $lowestX');
 
+            // find the mid of range
             var xMid = (highestX + lowestX)/2;
             var yMid = (highestY + lowestY)/2;
+
+            // find the actual range.
             var xRange = highestX - lowestX;
             var yRange = highestY - lowestY;
             
+            // the radius is our furthest value.
             var rad = (xRange > yRange) ? xRange/2: yRange/2;
 
             // neeed to add 1 to radius in case  point falls on the edge. Add another one for rounding
             var superCircle = new Circle(new Point(xMid,yMid),rad + 2);
-            trace('super circle: $superCircle');
-
 
             var superTri = superCircle.equalateralTriangle();
 

@@ -11,6 +11,13 @@ class Circle
         this.radius = radius;
     }
 
+    // creates an equalateral triangle that perfectly 
+    // encompasses this circle.
+    // This method takes the range of X and Y values. It creates
+    // a circle that encompasses this range.  It creates a triangle
+    // using a formula which is:
+    // area = 1/2 * b *h
+    // height = 3r
     public function equalateralTriangle():Triangle {
         var side = ((radius * 3 ) * 2) / Math.sqrt(3);
 
@@ -29,6 +36,8 @@ class Circle
         
     }
 
+    // Determines if this circle contains a point.
+    // uses distance formula and checks if its within the radius, exculsive.
     public function contains(p:Point):Bool 
     {
 
