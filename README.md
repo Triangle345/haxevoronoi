@@ -1,5 +1,7 @@
 # haxevoronoi
 Voronoi/Delaunay triangulation Library for haxe
+The below code should be easy to follow. Straight forward library not much explanation needed.
+I will try to post the haxedoc soon.
 
 
     pnts.push(new Point(130,140));
@@ -14,7 +16,7 @@ Voronoi/Delaunay triangulation Library for haxe
     pnts.push(new Point(50,111));
     pnts.push(new Point(400,320));
 
-		// the d. triangulation returns a list of triangles.
+    // the d. triangulation returns a list of triangles.
     var dtri = vor.GenerateTriangulation(pnts);
 	
     // the voronoi generation returns voronoi cells.
