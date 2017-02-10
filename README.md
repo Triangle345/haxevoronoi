@@ -21,6 +21,6 @@ Voronoi/Delaunay triangulation Library for haxe
     // voronoi cells contain a border (list of lines) , a site point and a list of triangles.
     var cells = vor.GenerateVoronoi(pnts);
     
-    ![haxevor image](https://cloud.githubusercontent.com/assets/4261822/22809537/426ac960-ef01-11e6-9298-e723e5d5fb34.PNG)
+    ![alt tag](https://cloud.githubusercontent.com/assets/4261822/22809537/426ac960-ef01-11e6-9298-e723e5d5fb34.PNG)
     
     
